@@ -16,6 +16,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { setUrl("https://funczz.github.io/kotlin-fsm") }
+        maven { setUrl("https://funczz.github.io/kotlin-sam") }
+        maven { setUrl("https://funczz.github.io/kotlin-rocket-launcher-core") }
     }
 }
 
