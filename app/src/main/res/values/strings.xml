@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Rocket Launcher</string>
+    <string name="startButton">"start"</string>
 </resources>
