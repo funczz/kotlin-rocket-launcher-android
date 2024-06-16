@@ -25,6 +25,7 @@
 
         <activity android:name=".activity.counting.CountingActivity" />
         <activity android:name=".activity.launched.LaunchedActivity" />
+        <activity android:name=".activity.aborted.AbortedActivity" />
     </application>
 
 </manifest>
