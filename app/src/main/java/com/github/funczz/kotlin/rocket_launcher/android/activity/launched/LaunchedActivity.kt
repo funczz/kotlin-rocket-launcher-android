@@ -8,11 +8,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.github.funczz.kotlin.rocket_launcher.android.UiPresenter
 import com.github.funczz.kotlin.rocket_launcher.android.ui.theme.RocketLauncherTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LaunchedActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var presenter: UiPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +29,7 @@ class LaunchedActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     LaunchedScreen(
+                        presenter = presenter
                     )
                 }
             }

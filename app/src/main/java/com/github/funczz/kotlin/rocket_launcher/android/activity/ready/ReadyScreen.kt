@@ -7,31 +7,43 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.funczz.kotlin.rocket_launcher.android.R
+import com.github.funczz.kotlin.rocket_launcher.android.UiCommand
+import com.github.funczz.kotlin.rocket_launcher.android.UiPresenter
+import com.github.funczz.kotlin.rocket_launcher.android.UiState
 import com.github.funczz.kotlin.rocket_launcher.android.ui.theme.RocketLauncherTheme
+import com.github.funczz.kotlin.rocket_launcher.core.sam.RocketLauncherSamModel
+import kotlinx.coroutines.flow.StateFlow
 
 
 @Composable
 fun ReadyScreen(
+    presenter: UiPresenter,
     modifier: Modifier = Modifier,
 ) {
+    val uiState by presenter.getState()
+
     val context = LocalContext.current
 
-    val owner = LocalLifecycleOwner.current
+    //val owner = LocalLifecycleOwner.current
 
-    SideEffect { Log.i("ReadyScreen", "content created.") }
+    SideEffect { Log.d("ReadyScreen", "Screen created: $uiState") }
 
     Column {
         //input field
         BasicTextField(
-            value = "",
+            value = uiState.input,
             onValueChange = {
+                ReadyCommand.updateFieldValue(
+                    value = it, uiState = uiState, render = presenter::render
+                )
             },
             modifier = modifier.testTag("field"),
         )
@@ -39,9 +51,8 @@ fun ReadyScreen(
         //start button
         Button(
             onClick = {
-            },
-            modifier = modifier.testTag("button"),
-            enabled = true
+                ReadyCommand.start(uiState = uiState, render = presenter::render)
+            }, modifier = modifier.testTag("button"), enabled = uiState.input.isNotBlank()
         ) {
             Text(
                 text = stringResource(id = R.string.startButton),
@@ -49,6 +60,7 @@ fun ReadyScreen(
         }
     }
 
+    UiCommand.consumeEvent(uiState = uiState, context = context, render = presenter::render)
 }
 
 
@@ -56,7 +68,23 @@ fun ReadyScreen(
 @Composable
 fun ReadyPreview() {
     RocketLauncherTheme {
-        ReadyScreen(
-        )
+        ReadyScreen(presenter = object : UiPresenter {
+            override val stateFlow: StateFlow<UiState>
+                get() = TODO("Not yet implemented")
+
+            @Composable
+            override fun getState(): State<UiState> {
+                TODO("Not yet implemented")
+            }
+
+            override fun render(output: RocketLauncherSamModel) {
+                TODO("Not yet implemented")
+            }
+
+            override fun render(output: UiState) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 }
