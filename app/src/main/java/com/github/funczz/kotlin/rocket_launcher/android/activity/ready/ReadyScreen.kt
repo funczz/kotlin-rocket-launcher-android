@@ -19,7 +19,6 @@ import com.github.funczz.kotlin.rocket_launcher.android.UiCommand
 import com.github.funczz.kotlin.rocket_launcher.android.UiPresenter
 import com.github.funczz.kotlin.rocket_launcher.android.UiState
 import com.github.funczz.kotlin.rocket_launcher.android.ui.theme.RocketLauncherTheme
-import com.github.funczz.kotlin.rocket_launcher.core.sam.RocketLauncherSamModel
 import kotlinx.coroutines.flow.StateFlow
 
 
@@ -60,7 +59,11 @@ fun ReadyScreen(
         }
     }
 
-    UiCommand.consumeEvent(uiState = uiState, context = context, render = presenter::render)
+    UiCommand.consumeEvent(
+        uiState = uiState,
+        context = context,
+        render = presenter::render
+    )
 }
 
 
@@ -68,23 +71,21 @@ fun ReadyScreen(
 @Composable
 fun ReadyPreview() {
     RocketLauncherTheme {
-        ReadyScreen(presenter = object : UiPresenter {
-            override val stateFlow: StateFlow<UiState>
-                get() = TODO("Not yet implemented")
+        ReadyScreen(
+            presenter = object : UiPresenter {
+                override val stateFlow: StateFlow<UiState>
+                    get() = TODO("Not yet implemented")
 
-            @Composable
-            override fun getState(): State<UiState> {
-                TODO("Not yet implemented")
-            }
+                @Composable
+                override fun getState(): State<UiState> {
+                    TODO("Not yet implemented")
+                }
 
-            override fun render(output: RocketLauncherSamModel) {
-                TODO("Not yet implemented")
-            }
+                override fun render(output: UiState) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun render(output: UiState) {
-                TODO("Not yet implemented")
-            }
-
-        })
+            },
+        )
     }
 }

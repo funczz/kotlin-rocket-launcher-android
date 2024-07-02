@@ -29,7 +29,7 @@ class AbortedActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     AbortedScreen(
-                        presenter = presenter
+                        presenter = presenter,
                     )
                 }
             }

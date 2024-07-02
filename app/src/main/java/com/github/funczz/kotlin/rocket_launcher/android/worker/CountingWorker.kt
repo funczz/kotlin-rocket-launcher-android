@@ -2,7 +2,6 @@ package com.github.funczz.kotlin.rocket_launcher.android.worker
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.hilt.work.HiltWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
@@ -12,6 +11,7 @@ import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.github.funczz.kotlin.rocket_launcher.android.UiPresenter
+import com.github.funczz.kotlin.rocket_launcher.android.UiRepresentation
 import com.github.funczz.kotlin.rocket_launcher.core.event.Decrement
 import com.github.funczz.kotlin.rocket_launcher.core.model.InputData
 import com.github.funczz.kotlin.rocket_launcher.core.sam.RocketLauncherSamAction
@@ -19,7 +19,6 @@ import com.github.funczz.kotlin.rocket_launcher.core.sam.RocketLauncherSamState
 import com.github.funczz.kotlin.rocket_launcher.core.state.Counting
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
@@ -35,7 +34,8 @@ class CountingWorker @AssistedInject constructor(
     }
 
     private fun onIsContinue(): Boolean {
-        val isBreak = presenter.stateFlow.value.isBreak
+        val uiState = presenter.stateFlow.value
+        val isBreak = uiState.countingState.isBreak
         val isCounting = RocketLauncherSamState.isCounting(presenter.stateFlow.value.samModel)
         Log.d(WORKER_TAG, "Continue: isBreak=%b isCounting=%b".format(isBreak, isCounting))
         return !isBreak && isCounting
@@ -55,7 +55,7 @@ class CountingWorker @AssistedInject constructor(
             event = Decrement,
         )
         RocketLauncherSamAction.accept(input = inputData, present = samModel::present)
-        presenter.render(output = samModel)
+        UiRepresentation.representation(model = uiState, render = presenter::render)
         Log.d(
             WORKER_TAG,
             "While: [%d:result] %s".format(inputData.currentCounter, samModel.toString())
@@ -64,19 +64,14 @@ class CountingWorker @AssistedInject constructor(
 
     private fun onError(exception: Exception) {
         Log.e(WORKER_TAG, "Error.", exception)
-        Toast.makeText(context, exception.toString(), Toast.LENGTH_SHORT).show()
+        val uiState = presenter.stateFlow.value
+        val newUiState = uiState.addEvent(exception.toString())
+        UiRepresentation.representation(model = newUiState, render = presenter::render)
     }
 
     private fun onTearDown() {
         Log.d(WORKER_TAG, "TearDown.")
-        presenter.render(
-            output = presenter.stateFlow.value.copy(
-                request = Optional.empty(),
-                isBreak = false,
-            )
-        )
     }
-
 
     override fun doWork(): Result = try {
         onSetUp()

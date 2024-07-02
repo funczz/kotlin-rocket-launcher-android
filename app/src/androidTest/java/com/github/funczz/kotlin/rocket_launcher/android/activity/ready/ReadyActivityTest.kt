@@ -59,8 +59,6 @@ class ReadyActivityTest {
         assertEquals(false, actual.samModel.isAborted)
         assertEquals(true, actual.samModel.isTransitioned)
         assertEquals(CountingActivity::class.java, actual.events.first().payload)
-        assertEquals(false, actual.request.isPresent)
-        assertEquals(false, actual.isBreak)
     }
 
     @get:Rule
@@ -87,7 +85,9 @@ class ReadyActivityTest {
     fun beforeEach() {
         hiltRule.inject()
         TestCountingWorkerFactory.initialize(
-            context = context, presenter = presenter, loggingLevel = Log.DEBUG
+            context = context,
+            presenter = presenter,
+            loggingLevel = Log.DEBUG
         )
 
         presenter.render(

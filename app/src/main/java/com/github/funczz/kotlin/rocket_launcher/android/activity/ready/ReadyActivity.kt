@@ -25,7 +25,9 @@ class ReadyActivity : ComponentActivity() {
             output = presenter.stateFlow.value.addEvent("Ready!")
         )
         UiCommand.consumeEvent(
-            uiState = presenter.stateFlow.value, context = applicationContext, presenter::render
+            uiState = presenter.stateFlow.value,
+            context = applicationContext,
+            presenter::render
         )
         setContent {
             RocketLauncherTheme {

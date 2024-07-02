@@ -16,7 +16,6 @@ import com.github.funczz.kotlin.rocket_launcher.android.UiState
 import com.github.funczz.kotlin.rocket_launcher.android.activity.aborted.AbortedActivity
 import com.github.funczz.kotlin.rocket_launcher.android.di.BindModule
 import com.github.funczz.kotlin.rocket_launcher.android.di.ProvideModule
-import com.github.funczz.kotlin.rocket_launcher.android.worker.CountingWorker
 import com.github.funczz.kotlin.rocket_launcher.core.model.RocketLauncher
 import com.github.funczz.kotlin.rocket_launcher.core.sam.RocketLauncherSamModel
 import com.github.funczz.kotlin.rocket_launcher.core.state.Counting
@@ -28,7 +27,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.Optional
 import javax.inject.Inject
 
 @UninstallModules(BindModule::class, ProvideModule::class)
@@ -53,8 +51,6 @@ class CountingActivityTest {
         assertEquals(true, actual.samModel.isAborted)
         assertEquals(true, actual.samModel.isTransitioned)
         assertEquals(AbortedActivity::class.java, actual.events.first().payload)
-        assertEquals(true, actual.request.isPresent)
-        assertEquals(false, actual.isBreak)
     }
 
     @get:Rule
@@ -80,7 +76,10 @@ class CountingActivityTest {
     @Before
     fun beforeEach() {
         hiltRule.inject()
-        TestCountingWorkerFactory.initialize(context = context, presenter = presenter)
+        TestCountingWorkerFactory.initialize(
+            context = context,
+            presenter = presenter,
+        )
 
         presenter.render(
             output = UiState(
@@ -91,7 +90,8 @@ class CountingActivityTest {
                         RocketLauncher(initialCounter = 1, currentCounter = 1, state = Counting)
                     )
                 },
-                request = Optional.of(CountingWorker.newRequest()),
+                currentActivityClass = CountingActivity::class.java,
+                isAndroidTest = true,
             )
         )
         val intent = Intent(context, CountingActivity::class.java)
