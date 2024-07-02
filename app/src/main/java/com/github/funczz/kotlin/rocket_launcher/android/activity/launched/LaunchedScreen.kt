@@ -19,7 +19,6 @@ import com.github.funczz.kotlin.rocket_launcher.android.UiCommand
 import com.github.funczz.kotlin.rocket_launcher.android.UiPresenter
 import com.github.funczz.kotlin.rocket_launcher.android.UiState
 import com.github.funczz.kotlin.rocket_launcher.android.ui.theme.RocketLauncherTheme
-import com.github.funczz.kotlin.rocket_launcher.core.sam.RocketLauncherSamModel
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
@@ -58,8 +57,11 @@ fun LaunchedScreen(
         }
     }
 
-    UiCommand.cancelWorker(uiState = uiState, render = presenter::render)
-    UiCommand.consumeEvent(uiState = uiState, context = context, render = presenter::render)
+    UiCommand.consumeEvent(
+        uiState = uiState,
+        context = context,
+        render = presenter::render
+    )
 }
 
 @Preview(showBackground = true)
@@ -76,14 +78,10 @@ fun LaunchedPreview() {
                     TODO("Not yet implemented")
                 }
 
-                override fun render(output: RocketLauncherSamModel) {
-                    TODO("Not yet implemented")
-                }
-
                 override fun render(output: UiState) {
                     TODO("Not yet implemented")
                 }
-            }
+            },
         )
     }
 }

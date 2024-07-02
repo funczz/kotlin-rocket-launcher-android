@@ -34,7 +34,7 @@ class CountingWorkerTest {
 
     @Test
     fun countDown() {
-        field.assertTextEquals("0")
+        field.assertTextEquals("Launched.")
     }
 
     @get:Rule
@@ -76,10 +76,9 @@ class CountingWorkerTest {
                         )
                     )
                 },
-                //request = Optional.of(CountingWorker.newRequest())
+                //countingState = CountingState().apply { request(CountingWorker.newRequest()) }
             )
         )
-
         TestCountingWorkerFactory.initialize(context = context, presenter = presenter)
 
         val intent = Intent(context, CountingActivity::class.java)

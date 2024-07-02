@@ -51,8 +51,6 @@ class AbortedActivityTest {
         assertEquals(false, actual.samModel.isAborted)
         assertEquals(true, actual.samModel.isTransitioned)
         assertEquals(ReadyActivity::class.java, actual.events.first().payload)
-        assertEquals(false, actual.request.isPresent)
-        assertEquals(false, actual.isBreak)
     }
 
     @get:Rule
@@ -78,7 +76,10 @@ class AbortedActivityTest {
     @Before
     fun beforeEach() {
         hiltRule.inject()
-        TestCountingWorkerFactory.initialize(context = context, presenter = presenter)
+        TestCountingWorkerFactory.initialize(
+            context = context,
+            presenter = presenter,
+        )
 
         presenter.render(
             output = UiState(
@@ -89,6 +90,7 @@ class AbortedActivityTest {
                         RocketLauncher(initialCounter = 1, currentCounter = 1, state = Aborted)
                     )
                 },
+                currentActivityClass = AbortedActivity::class.java,
             )
         )
         val intent = Intent(context, AbortedActivity::class.java)

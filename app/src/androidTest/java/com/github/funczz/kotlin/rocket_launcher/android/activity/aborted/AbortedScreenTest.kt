@@ -49,8 +49,6 @@ class AbortedScreenTest {
         assertEquals(false, actual.samModel.isAborted)
         assertEquals(true, actual.samModel.isTransitioned)
         assertEquals(ReadyActivity::class.java, actual.events.first().payload)
-        assertEquals(false, actual.request.isPresent)
-        assertEquals(false, actual.isBreak)
     }
 
     @get:Rule
@@ -74,7 +72,10 @@ class AbortedScreenTest {
     @Before
     fun beforeEach() {
         hiltRule.inject()
-        TestCountingWorkerFactory.initialize(context = context, presenter = presenter)
+        TestCountingWorkerFactory.initialize(
+            context = context,
+            presenter = presenter,
+        )
 
         presenter.render(
             output = UiState(
@@ -85,6 +86,7 @@ class AbortedScreenTest {
                         RocketLauncher(initialCounter = 1, currentCounter = 1, state = Aborted)
                     )
                 },
+                currentActivityClass = AbortedActivity::class.java,
             )
         )
         composeTestRule.setContent {

@@ -29,7 +29,7 @@ class LaunchedActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     LaunchedScreen(
-                        presenter = presenter
+                        presenter = presenter,
                     )
                 }
             }

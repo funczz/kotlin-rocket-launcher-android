@@ -1,11 +1,11 @@
 package com.github.funczz.kotlin.rocket_launcher.android.activity.ready
 
 import android.util.Log
+import com.github.funczz.kotlin.rocket_launcher.android.UiRepresentation
 import com.github.funczz.kotlin.rocket_launcher.android.UiState
 import com.github.funczz.kotlin.rocket_launcher.core.event.Start
 import com.github.funczz.kotlin.rocket_launcher.core.model.InputData
 import com.github.funczz.kotlin.rocket_launcher.core.sam.RocketLauncherSamAction
-import com.github.funczz.kotlin.rocket_launcher.core.sam.RocketLauncherSamModel
 import com.github.funczz.kotlin.rocket_launcher.core.state.Ready
 
 object ReadyCommand {
@@ -17,14 +17,15 @@ object ReadyCommand {
             val intString = if (value.isNotBlank()) {
                 value.toInt().toString()
             } else ""
-            render(uiState.copy(input = intString))
+            val newUiState = uiState.copy(input = intString)
+            UiRepresentation.representation(model = newUiState, render = render)
             Log.d(this::class.java.simpleName, "Input field updated: value=`$intString`")
         } catch (_: NumberFormatException) {
         }
     }
 
     @JvmStatic
-    fun start(uiState: UiState, render: (RocketLauncherSamModel) -> Unit) {
+    fun start(uiState: UiState, render: (UiState) -> Unit) {
         Log.i(this::class.java.simpleName, "`start` button clicked: $uiState")
         val counter = uiState.input.toInt()
         val inputData = InputData(
@@ -33,12 +34,12 @@ object ReadyCommand {
             state = Ready,
             event = Start(initialCounter = counter)
         )
-        val rocketLauncherSamModel = uiState.samModel
         RocketLauncherSamAction.accept(
-            input = inputData, present = rocketLauncherSamModel::present
+            input = inputData, present = uiState.samModel::present
         )
+        uiState.countingState.initialize()
         Log.d(this::class.java.simpleName, "`start` button clicked: [result] $uiState")
-        render(rocketLauncherSamModel)
+        UiRepresentation.representation(model = uiState, render = render)
     }
 
 }

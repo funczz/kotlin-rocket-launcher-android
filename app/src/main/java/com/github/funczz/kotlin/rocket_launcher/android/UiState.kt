@@ -1,8 +1,8 @@
 package com.github.funczz.kotlin.rocket_launcher.android
 
-import androidx.work.OneTimeWorkRequest
+import com.github.funczz.kotlin.rocket_launcher.android.activity.ready.ReadyActivity
+import com.github.funczz.kotlin.rocket_launcher.android.worker.CountingState
 import com.github.funczz.kotlin.rocket_launcher.core.sam.RocketLauncherSamModel
-import java.util.Optional
 
 data class UiState(
 
@@ -12,11 +12,13 @@ data class UiState(
 
     val samModel: RocketLauncherSamModel = RocketLauncherSamModel(),
 
+    val currentActivityClass: Class<*> = ReadyActivity::class.java,
+
     val events: List<UiEvent> = emptyList(),
 
-    val request: Optional<OneTimeWorkRequest> = Optional.empty(),
+    val countingState: CountingState = CountingState(),
 
-    val isBreak: Boolean = false,
+    val isAndroidTest: Boolean = false,
 
     ) {
 

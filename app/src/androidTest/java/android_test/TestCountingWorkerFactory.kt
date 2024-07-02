@@ -13,9 +13,9 @@ import com.github.funczz.kotlin.rocket_launcher.android.worker.CountingWorker
 
 class TestCountingWorkerFactory(
 
-    private val presenter: UiPresenter
+    private val presenter: UiPresenter,
 
-) : WorkerFactory() {
+    ) : WorkerFactory() {
 
     override fun createWorker(
         appContext: Context,
@@ -44,7 +44,11 @@ class TestCountingWorkerFactory(
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(loggingLevel)
                 .setExecutor(SynchronousExecutor())
-                .setWorkerFactory(TestCountingWorkerFactory(presenter = presenter))
+                .setWorkerFactory(
+                    TestCountingWorkerFactory(
+                        presenter = presenter,
+                    )
+                )
                 .build()
             WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
         }

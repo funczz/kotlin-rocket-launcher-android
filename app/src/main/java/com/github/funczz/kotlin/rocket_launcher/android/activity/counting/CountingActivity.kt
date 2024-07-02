@@ -29,7 +29,7 @@ class CountingActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     CountingScreen(
-                        presenter = presenter
+                        presenter = presenter,
                     )
                 }
             }
