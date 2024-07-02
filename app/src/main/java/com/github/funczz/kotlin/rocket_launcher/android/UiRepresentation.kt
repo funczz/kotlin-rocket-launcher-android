@@ -12,7 +12,10 @@ object UiRepresentation : SamStateRepresentation<UiState, UiState> {
     override fun representation(model: UiState): UiState {
         val newUiState = if (model.samModel.isTransitioned) {
             val activityClass = when {
-                RocketLauncherSamState.isReady(model.samModel) -> ReadyActivity::class.java
+                RocketLauncherSamState.isReady(model.samModel) -> {
+                    model.countingState.initialize()
+                    ReadyActivity::class.java
+                }
 
                 RocketLauncherSamState.isCounting(model.samModel) -> CountingActivity::class.java
 

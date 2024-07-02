@@ -37,7 +37,6 @@ object ReadyCommand {
         RocketLauncherSamAction.accept(
             input = inputData, present = uiState.samModel::present
         )
-        uiState.countingState.initialize()
         Log.d(this::class.java.simpleName, "`start` button clicked: [result] $uiState")
         UiRepresentation.representation(model = uiState, render = render)
     }
