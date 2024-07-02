@@ -1,6 +1,8 @@
 package com.github.funczz.kotlin.rocket_launcher.android.worker
 
+import android.content.Context
 import androidx.work.OneTimeWorkRequest
+import com.github.funczz.kotlin.rocket_launcher.android.UiState
 import java.util.Optional
 
 class CountingState {
@@ -20,13 +22,19 @@ class CountingState {
         _isBreak = false
     }
 
-    fun request(request: OneTimeWorkRequest? = null) {
-        _request = Optional.ofNullable(request)
+    fun enqueueWork(uiState: UiState, context: Context) {
+        if (uiState.isAndroidTest) return
+        if (_request.isPresent) return
+        if (_isBreak) return
+        val req = CountingWorker.newRequest()
+        _request = Optional.of(req)
+        CountingWorker.enqueueUniqueWork(context = context, request = req)
     }
 
-    fun breakNow() {
+    fun cancelWork(context: Context) {
         if (!_request.isPresent) return
         _isBreak = true
+        CountingWorker.cancelWork(context = context, request = _request.get())
     }
 
     override fun toString(): String {
